@@ -1,44 +1,51 @@
 package ua.net.topline.screen;
 
-import ua.net.topline.controller.WorldController;
 import ua.net.topline.model.Player;
 import ua.net.topline.model.World;
-import ua.net.topline.view.WorldRenderer;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class GdxSampleMain implements Screen, InputProcessor {
+	public static float CAMERA_WIDTH = 8f;
+	public static float CAMERA_HEIGHT = 5f;
+	protected OrthographicCamera camera;
 	protected World world;
-	protected WorldRenderer renderer;
-	protected WorldController controller;
 	
 	protected int width;
 	protected int height;
 
+	public GdxSampleMain() {
+		this.camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
+		setCamera(CAMERA_WIDTH / 2f, CAMERA_HEIGHT / 2f);
+	}
 	@Override
+	public void resize(int width, int height) {
+		this.width = width;
+		this.height = height;
+		world.setViewport(width, height, true);
+	}
+
+@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		controller.update(delta);
-		renderer.render();
+		world.draw();
 	}
 
-	@Override
-	public void resize(int width, int height) {
-		renderer.setSize(width, height);
-		this.width = width;
-		this.height = height;
+	public void setCamera(float x, float y) {
+		this.camera.position.set(x, y, 0);
+		this.camera.update();
 	}
+
 
 	@Override
 	public void show() {
 		world = new World();
-		renderer = new WorldRenderer(world);
-		controller = new WorldController(world);
 		Gdx.input.setInputProcessor(this);
 	}
 
@@ -97,7 +104,6 @@ public class GdxSampleMain implements Screen, InputProcessor {
 		if (!Gdx.app.getType().equals(ApplicationType.Android)){
 		return false;
 		}
-		controller.releaseWay();
 		return true;
 	}
 
@@ -120,19 +126,7 @@ public class GdxSampleMain implements Screen, InputProcessor {
 	}
 	
 	public void ChangeNavigation(int x, int y) {
-		controller.releaseWay();
-		if (height - y > controller.player.getPosition().y * renderer.ppuY){
-			controller.upPressed();
-		}
-		if (height - y < controller.player.getPosition().y * renderer.ppuY){
-			controller.downPressed();
-		}
-		if (x > (controller.player.getPosition().x + Player.SIZE) * renderer.ppuX){
-			controller.rightPressed();
-		}
-		if (x < controller.player.getPosition().x * renderer.ppuX){
-			controller.leftPressed();
-		}
+
 	}
 
 }

@@ -2,8 +2,9 @@ package ua.net.topline.model;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Player {
+public class Player extends Actor {
 	// player state
 	public enum State {
 		NONE, WALKING, DEAD
@@ -44,6 +45,16 @@ public class Player {
 
 	public Rectangle getBounds() {
 		return bounds;
+	}
+
+	public void changeNavigation(float x, float f) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void resetWay() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
