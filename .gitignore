@@ -1,0 +1,6 @@
+/my-gdx-game-sample-android/bin
+/my-gdx-game-sample-core/bin
+
+/my-gdx-game-sample-desktop/bin
+/my-gdx-game-sample-html/war/WEB-INF/classes/ua/net/topline/GwtDefinition.gwt.xml
+/my-gdx-game-sample-html/war/WEB-INF/classes/ua/net/topline/client/GwtLauncher.class
