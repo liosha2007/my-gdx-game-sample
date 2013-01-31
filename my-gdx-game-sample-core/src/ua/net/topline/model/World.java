@@ -1,80 +1,73 @@
 package ua.net.topline.model;
 
-import java.util.ArrayList;
+import java.util.Map;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class World extends Stage {
-	// Array of blocks
-	protected ArrayList<Brick> bricks = new ArrayList<Brick>();
-	// Player
-	protected Player player;
-	// World width
-	public int width;
-	// World height
-	public int height;
-	//
-	protected Actor selectedActor;
+	protected float ppuX;
+	protected float ppuY;
+	protected Actor selectedActor = null;
+	protected Map<String, TextureRegion> textureRegions;
+	public static float CAMERA_WIDTH = 8f;
+	public static float CAMERA_HEIGHT = 5f;
 
-	public World() {
-		this.width = 8;
-		this.height = 5;
-		createWorld();
+	public World(int x, int y, boolean b, SpriteBatch spriteBatch,
+			Map<String, TextureRegion> textureRegions) {
+		super(x, y, b, spriteBatch);
+		this.textureRegions = textureRegions;
+		ppuX = getWidth() / CAMERA_WIDTH;
+		ppuY = getHeight() / CAMERA_HEIGHT;
+		addActor(new Player(new Vector2(4, 2), this));
+		addActor(new Player(new Vector2(4, 4), this));
 	}
 
-	public void createWorld() {
-		player = new Player(new Vector2(6, 2));
-		bricks.add(new Brick(new Vector2(0, 0)));
-		bricks.add(new Brick(new Vector2(1, 0)));
-		bricks.add(new Brick(new Vector2(2, 0)));
-		bricks.add(new Brick(new Vector2(3, 0)));
-		bricks.add(new Brick(new Vector2(4, 0)));
-		bricks.add(new Brick(new Vector2(5, 0)));
-		bricks.add(new Brick(new Vector2(6, 0)));
-		bricks.add(new Brick(new Vector2(7, 0)));
+	@Override
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		super.touchDown(x, y, pointer, button);
+		moveSelected(x, y);
+		return true;
 	}
 
-	public ArrayList<Brick> getBricks() {
-		return bricks;
+	@Override
+	public boolean touchUp(int x, int y, int pointer, int button) {
+		super.touchUp(x, y, pointer, button);
+		resetSelected();
+		return true;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public void update(float delta) {
+		for (Actor actor : this.getActors())
+			if (actor instanceof Player)
+				((Player) actor).update(delta);
 	}
 
-	protected void moveSelected(float x, float y) {
+	public void setPP(float x, float y) {
+		ppuX = x;
+		ppuY = y;
+	}
+
+	private void moveSelected(float x, float y) {
 		if (selectedActor != null && selectedActor instanceof Player) {
-			((Player) selectedActor).changeNavigation(x, this.getHeight() - y);
+			((Player) selectedActor).ChangeNavigation(x, this.getHeight() - y);
 		}
 	}
 
-	protected void resetSelected() {
+	private void resetSelected() {
 		if (selectedActor != null && selectedActor instanceof Player) {
 			((Player) selectedActor).resetWay();
 		}
 	}
 
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		super.touchDown(screenX, screenY, pointer, button);
-		moveSelected(screenX, screenY);
-		return true;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		super.touchUp(screenX, screenY, pointer, button);
-		resetSelected();
-		return true;
-	}
-
 	public Actor hit(float x, float y, boolean touchable) {
+
 		Actor actor = super.hit(x, y, touchable);
-		if (actor != null) {
+		if (actor != null)
 			selectedActor = actor;
-		}
 		return actor;
 	}
 }

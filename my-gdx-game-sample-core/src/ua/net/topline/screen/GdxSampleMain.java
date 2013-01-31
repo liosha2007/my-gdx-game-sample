@@ -1,6 +1,8 @@
 package ua.net.topline.screen;
 
-import ua.net.topline.model.Player;
+import java.util.HashMap;
+import java.util.Map;
+
 import ua.net.topline.model.World;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -9,20 +11,46 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GdxSampleMain implements Screen, InputProcessor {
-	public static float CAMERA_WIDTH = 8f;
-	public static float CAMERA_HEIGHT = 5f;
-	protected OrthographicCamera camera;
+	protected OrthographicCamera cam;
 	protected World world;
-	
+	protected SpriteBatch spriteBatch;
+	protected Texture texture;
+	protected Map<String, TextureRegion> textureRegions = new HashMap<String, TextureRegion>();
 	protected int width;
 	protected int height;
 
-	public GdxSampleMain() {
-		this.camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-		setCamera(CAMERA_WIDTH / 2f, CAMERA_HEIGHT / 2f);
+	@Override
+	public void show() {
+		this.cam = new OrthographicCamera(World.CAMERA_WIDTH,
+				World.CAMERA_HEIGHT);
+		SetCamera(World.CAMERA_WIDTH / 2f, World.CAMERA_HEIGHT / 2f);
+		spriteBatch = new SpriteBatch();
+		loadTextures();
+		world = new World(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+				false, spriteBatch, textureRegions);
+		Gdx.input.setInputProcessor(world);
 	}
+
+	private void loadTextures() {
+		texture = new Texture(Gdx.files.internal("images/atlas.png"));
+		TextureRegion tmp[][] = TextureRegion.split(texture,
+				texture.getWidth() / 2, texture.getHeight() / 2);
+		textureRegions.put("player", tmp[0][0]);
+		textureRegions.put("brick1", tmp[0][1]);
+		textureRegions.put("brick2", tmp[1][0]);
+		textureRegions.put("brick3", tmp[1][1]);
+	}
+
+	public void SetCamera(float x, float y) {
+		this.cam.position.set(x, y, 0);
+		this.cam.update();
+	}
+
 	@Override
 	public void resize(int width, int height) {
 		this.width = width;
@@ -30,23 +58,28 @@ public class GdxSampleMain implements Screen, InputProcessor {
 		world.setViewport(width, height, true);
 	}
 
-@Override
+	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		world.update(delta);
 		world.draw();
 	}
 
-	public void setCamera(float x, float y) {
-		this.camera.position.set(x, y, 0);
-		this.camera.update();
+	@Override
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		if (!Gdx.app.getType().equals(ApplicationType.Android)) {
+			return false;
+		}
+		return true;
 	}
 
-
 	@Override
-	public void show() {
-		world = new World();
-		Gdx.input.setInputProcessor(this);
+	public boolean touchUp(int x, int y, int pointer, int button) {
+		if (!Gdx.app.getType().equals(ApplicationType.Android)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -55,78 +88,45 @@ public class GdxSampleMain implements Screen, InputProcessor {
 	}
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+		Gdx.input.setInputProcessor(null);
 	}
 
 	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+	public boolean touchDragged(int x, int y, int pointer) {
 		return false;
 	}
 
 	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
+	public boolean mouseMoved(int x, int y) {
 		return false;
 	}
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if (!Gdx.app.getType().equals(ApplicationType.Android)){
-		return false;
-		}
-		ChangeNavigation(screenX, screenY);
+	public void pause() {
+	}
+
+	@Override
+	public void resume() {
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
 		return true;
 	}
 
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if (!Gdx.app.getType().equals(ApplicationType.Android)){
-		return false;
-		}
+	public boolean keyUp(int keycode) {
 		return true;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		ChangeNavigation(screenX, screenY);
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	public void ChangeNavigation(int x, int y) {
-
-	}
-
 }
