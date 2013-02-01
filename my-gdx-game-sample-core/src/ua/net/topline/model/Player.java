@@ -105,7 +105,7 @@ public class Player extends Actor {
 		getVelocity().y = 0;
 	}
 
-	private void processInput() {
+	public void processInput() {
 		if (direction.get(Keys.LEFT)) {
 			getVelocity().x = -Player.SPEED;
 		}
