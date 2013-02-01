@@ -3,7 +3,7 @@ package ua.net.topline.model;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,18 +12,30 @@ public class World extends Stage {
 	protected float ppuX;
 	protected float ppuY;
 	protected Actor selectedActor = null;
-	protected Map<String, TextureRegion> textureRegions;
+	protected Map<String, AtlasRegion> atlasRegions;
 	public static float CAMERA_WIDTH = 8f;
 	public static float CAMERA_HEIGHT = 5f;
 
 	public World(int x, int y, boolean b, SpriteBatch spriteBatch,
-			Map<String, TextureRegion> textureRegions) {
+			Map<String, AtlasRegion> textureRegions) {
 		super(x, y, b, spriteBatch);
-		this.textureRegions = textureRegions;
+		this.atlasRegions = textureRegions;
 		ppuX = getWidth() / CAMERA_WIDTH;
 		ppuY = getHeight() / CAMERA_HEIGHT;
 		addActor(new Player(new Vector2(4, 2), this));
 		addActor(new Player(new Vector2(4, 4), this));
+
+		addActor(new Brick(new Vector2(7, 4), this, textureRegions.get("brick_a")));
+		addActor(new Brick(new Vector2(0, 4), this, textureRegions.get("brick_a")));
+
+		addActor(new Brick(new Vector2(0, 0), this, textureRegions.get("brick_a")));
+		addActor(new Brick(new Vector2(1, 0), this, textureRegions.get("brick_b")));
+		addActor(new Brick(new Vector2(2, 0), this, textureRegions.get("brick_c")));
+		addActor(new Brick(new Vector2(3, 0), this, textureRegions.get("brick_b")));
+		addActor(new Brick(new Vector2(4, 0), this, textureRegions.get("brick_c")));
+		addActor(new Brick(new Vector2(5, 0), this, textureRegions.get("brick_b")));
+		addActor(new Brick(new Vector2(6, 0), this, textureRegions.get("brick_c")));
+		addActor(new Brick(new Vector2(7, 0), this, textureRegions.get("brick_a")));
 	}
 
 	@Override
@@ -42,8 +54,9 @@ public class World extends Stage {
 
 	public void update(float delta) {
 		for (Actor actor : this.getActors())
-			if (actor instanceof Player)
+			if (actor instanceof Player) {
 				((Player) actor).update(delta);
+			}
 	}
 
 	public void setPP(float x, float y) {

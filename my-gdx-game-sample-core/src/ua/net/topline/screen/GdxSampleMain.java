@@ -13,14 +13,15 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GdxSampleMain implements Screen, InputProcessor {
 	protected OrthographicCamera cam;
 	protected World world;
 	protected SpriteBatch spriteBatch;
-	protected Texture texture;
-	protected Map<String, TextureRegion> textureRegions = new HashMap<String, TextureRegion>();
+	protected Map<String, AtlasRegion> textureRegions = new HashMap<String, AtlasRegion>();
 	protected int width;
 	protected int height;
 
@@ -37,13 +38,12 @@ public class GdxSampleMain implements Screen, InputProcessor {
 	}
 
 	private void loadTextures() {
-		texture = new Texture(Gdx.files.internal("images/atlas.png"));
-		TextureRegion tmp[][] = TextureRegion.split(texture,
-				texture.getWidth() / 2, texture.getHeight() / 2);
-		textureRegions.put("player", tmp[0][0]);
-		textureRegions.put("brick1", tmp[0][1]);
-		textureRegions.put("brick2", tmp[1][0]);
-		textureRegions.put("brick3", tmp[1][1]);
+		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("images/atlas.txt"));
+		textureRegions.put("joystic", textureAtlas.findRegion("joystic"));
+		textureRegions.put("player", textureAtlas.findRegion("player"));
+		textureRegions.put("brick_a", textureAtlas.findRegion("brick_a"));
+		textureRegions.put("brick_b", textureAtlas.findRegion("brick_b"));
+		textureRegions.put("brick_c", textureAtlas.findRegion("brick_c"));
 	}
 
 	public void SetCamera(float x, float y) {

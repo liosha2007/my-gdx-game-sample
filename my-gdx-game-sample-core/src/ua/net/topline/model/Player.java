@@ -63,7 +63,7 @@ public class Player extends Actor {
 		if (this.equals(world.selectedActor)) {
 			batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
 		}
-		batch.draw(world.textureRegions.get("player"), getX(), getY(),
+		batch.draw(world.atlasRegions.get("player"), getX(), getY(),
 				getWidth(), getHeight());
 		batch.setColor(1, 1, 1, 1);
 	}

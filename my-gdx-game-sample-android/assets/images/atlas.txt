@@ -1,0 +1,39 @@
+atlas.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+joystic
+  rotate: false
+  xy: 0, 64
+  size: 50, 49
+  orig: 64, 63
+  offset: 7, 7
+  index: -1
+brick_a
+  rotate: false
+  xy: 18, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 0, 0
+  size: 18, 24
+  orig: 32, 32
+  offset: 7, 3
+  index: -1
+brick_b
+  rotate: false
+  xy: 32, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+brick_c
+  rotate: false
+  xy: 0, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
